@@ -102,9 +102,8 @@ export class OfferScene extends BaseScene {
       ? `¡Hemos recibido tu mensaje, ${first}!`
       : '¡Hemos recibido tu mensaje!';
 
-    this.root.replaceChildren();
     const card = document.createElement('div');
-    card.className = 'confirm-card fade-up';
+    card.className = 'confirm-card';
     card.setAttribute('role', 'status');
     card.setAttribute('aria-live', 'polite');
     card.innerHTML = `
@@ -123,6 +122,22 @@ export class OfferScene extends BaseScene {
     `;
     const titleEl = card.querySelector('.confirm-title');
     if (titleEl) titleEl.textContent = title;
+
+    // Mantener el shell de oferta: solo cambia el panel del form.
+    // Así en desktop no colapsa el layout 2 columnas → tarjeta chica (salto feo).
+    const panel = this.root.querySelector('.offer-form-panel');
+    const copy = this.root.querySelector('.offer-copy');
+    if (panel) {
+      const mobile = window.matchMedia('(max-width: 899px)').matches;
+      if (copy && mobile) copy.hidden = true;
+      panel.classList.add('is-confirm');
+      panel.replaceChildren(card);
+      this.root.classList.add('scene--confirm');
+      return;
+    }
+
+    this.root.replaceChildren();
+    this.root.classList.add('scene--confirm');
     this.root.appendChild(card);
   }
 
