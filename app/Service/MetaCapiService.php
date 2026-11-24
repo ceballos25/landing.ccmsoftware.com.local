@@ -54,7 +54,8 @@ final class MetaCapiService
             return ['ok' => true, 'skipped' => true, 'reason' => 'tracking_disabled'];
         }
 
-        if ($config->getBool('REQUIRE_CONSENT', true) && !$hasConsent) {
+        // Solo bloquear si REQUIRE_CONSENT=true Y el visitante rechazó
+        if ($config->getBool('REQUIRE_CONSENT', false) && !$hasConsent) {
             return ['ok' => true, 'skipped' => true, 'reason' => 'no_consent'];
         }
 

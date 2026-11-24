@@ -1,7 +1,8 @@
 /**
  * Meta tracking:
- * - Pixel browser → solo PageView (tras consentimiento)
+ * - Pixel browser → solo PageView
  * - Conversiones → /api/track.php → Conversions API (servidor)
+ * - Sin banner de consentimiento si REQUIRE_CONSENT=false
  */
 export class TrackingService {
   /**

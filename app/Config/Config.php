@@ -130,7 +130,7 @@ final class Config
             'contactPhoneDisplay' => $this->get('CONTACT_PHONE_DISPLAY', '+57 323 374 5913'),
             'metaPixelId' => $this->get('META_PIXEL_ID', ''),
             'metaTrackingEnabled' => $this->getBool('META_TRACKING_ENABLED', false),
-            'requireConsent' => $this->getBool('REQUIRE_CONSENT', true),
+            'requireConsent' => $this->getBool('REQUIRE_CONSENT', false),
         ];
     }
 }
