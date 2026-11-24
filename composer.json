@@ -1,0 +1,17 @@
+{
+  "name": "ccmsoftware/cinematic-funnel",
+  "description": "Experiencia de ventas cinematográfica interactiva para CCM SOFTWARE_",
+  "type": "project",
+  "require": {
+    "php": ">=8.2",
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ccm\\Cinematic\\": "app/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

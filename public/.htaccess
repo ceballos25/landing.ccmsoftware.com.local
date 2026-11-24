@@ -1,0 +1,30 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  <FilesMatch "\.(php|html|htm)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(mp3|wav|mp4|webm|jpg|jpeg|png|webp|svg|woff2)$">
+    Header set Cache-Control "public, max-age=604800, immutable"
+  </FilesMatch>
+</IfModule>
+
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>

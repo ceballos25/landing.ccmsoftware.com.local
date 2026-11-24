@@ -1,0 +1,53 @@
+Options +FollowSymLinks -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Solo servir front público: /, index.php, /assets, /api
+  # (DocumentRoot aún apunta al repo; esto cierra app/storage/vendor/PII)
+  RewriteRule ^(?:app|storage|vendor|tests|database|views)(?:/|$) - [F,L]
+  RewriteRule ^(?:composer\.(?:json|lock)|README\.md|GUIA_[^/]+|\.env(?:\..*)?)$ - [F,L]
+
+  RewriteCond %{REQUEST_URI} !^/$ [NC]
+  RewriteCond %{REQUEST_URI} !^/index\.php$ [NC]
+  RewriteCond %{REQUEST_URI} !^/(assets|api)(/|$) [NC]
+  RewriteCond %{REQUEST_URI} !^/public(/|$) [NC]
+  RewriteRule ^ - [F,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Documento HTML/PHP: nunca cachear (rompe el ciclo “borrar caché en iPhone”)
+  <FilesMatch "\.(php|html|htm)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # JS/CSS: revalidar siempre (importmap añade ?v=mtime)
+  <FilesMatch "\.(js|css)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Media pesada versionada con ?v= en URL
+  <FilesMatch "\.(mp3|wav|mp4|webm|jpg|jpeg|png|webp|svg|woff2)$">
+    Header set Cache-Control "public, max-age=604800, immutable"
+  </FilesMatch>
+</IfModule>
+
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+
+<FilesMatch "\.(env|jsonl|log|sql|md|lock)$">
+  Require all denied
+</FilesMatch>
+
+<Files "composer.json">
+  Require all denied
+</Files>

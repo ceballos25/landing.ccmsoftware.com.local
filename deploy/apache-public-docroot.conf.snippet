@@ -1,0 +1,32 @@
+# Aplicar con sudo cuando puedas (DocumentRoot correcto = public/)
+# sudo cp este contenido sobre /etc/apache2/sites-available/raffle-landing.ccmsoftware.local.conf
+# y luego: sudo systemctl reload apache2
+
+<VirtualHost *:80>
+    ServerName raffle-landing.ccmsoftware.local
+    DocumentRoot /home/cristian-ceballos/websites/raffle-landing.ccmsoftware.local/public
+    Redirect permanent / https://raffle-landing.ccmsoftware.local/
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName raffle-landing.ccmsoftware.local
+    DocumentRoot /home/cristian-ceballos/websites/raffle-landing.ccmsoftware.local/public
+
+    SSLEngine on
+    SSLCertificateFile /home/cristian-ceballos/ssl/raffle-landing.ccmsoftware.local/raffle-landing.ccmsoftware.local.pem
+    SSLCertificateKeyFile /home/cristian-ceballos/ssl/raffle-landing.ccmsoftware.local/raffle-landing.ccmsoftware.local-key.pem
+
+    <Directory /home/cristian-ceballos/websites/raffle-landing.ccmsoftware.local/public>
+        Options FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Negar escape al repo padre
+    <Directory /home/cristian-ceballos/websites/raffle-landing.ccmsoftware.local>
+        Require all denied
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/raffle-landing.ccmsoftware.local-error.log
+    CustomLog ${APACHE_LOG_DIR}/raffle-landing.ccmsoftware.local-access.log combined
+</VirtualHost>
